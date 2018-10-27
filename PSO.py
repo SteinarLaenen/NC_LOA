@@ -10,15 +10,15 @@ def HC(x):
 ##initialization
 f_g = np.Inf
 m = 100
-n = 20
-alpha1 = 2
-alpha2 = 2
+n = 100000
+alpha1 = 1
+alpha2 = 3
 omega = 0.7
-lower_limit = 0
-upper_limit = 1
-iterations = 20000
+# lower_limit = 0
+# upper_limit = 1
+iterations = 100
 
-x = (lower_limit + (upper_limit - lower_limit))*np.random.uniform(0, 1, (n, m))
+x = np.random.uniform(0, 1, (n, m))
 v = np.zeros(x.shape)
 f_p = HC(x.T)
 
