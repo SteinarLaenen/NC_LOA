@@ -4,8 +4,6 @@
 # Main LOA engine
 
 # library imports
-import numpy as np
-
 import LOA_lib
 
 
@@ -18,3 +16,23 @@ sexRate = 0.8
 mateProb = 0.3
 migrateRate = 0.4
 nPop = 100
+
+# initialise the populations into structures of prides and nomads
+prideArray, nomadLionsArray = LOA_lib.generateGroups(nPop, sexRate, prideNo, percentNomad)
+
+
+
+while True:
+
+
+    #for each pride:
+        #some femail go hunting
+        #other stuff too
+
+    #for each nomad:
+        #move about randomly in search space
+
+    #for each pride again
+        #some femail migrate to pride
+
+    # final do: fig 11 step 6

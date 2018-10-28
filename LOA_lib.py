@@ -75,7 +75,7 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad):
         ''' assigning each pride lion to a pride '''
         # index of pride to assign lion
         # eg for 4 prides, number is 0,1,2,3
-        prideIndex = random.rand(0, prideNo - 1)
+        prideIndex = random.randint(0, prideNo - 1)
         prideArray[prideIndex].lionArray = np.append(prideArray[prideIndex].lionArray, prideLionsArray[i])
 
     return prideArray, nomadLionsArray
