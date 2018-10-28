@@ -1,5 +1,16 @@
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt    
+
+##initialization
+f_g = np.Inf
+m = 30
+n = 20000
+alpha1 = 3
+alpha2 = 1
+omega = 0.7
+lower_limit = -100
+upper_limit = 100
+iterations = 1000
 
 def HC(x):
     sum = 0.0
@@ -7,20 +18,18 @@ def HC(x):
         sum += ((10 ** 6) ** ((i - 1) / (len(x) - 1))) * x[i - 1] ** 2
     return sum
 
-##initialization
-f_g = np.Inf
-m = 100
-n = 100000
-alpha1 = 1
-alpha2 = 3
-omega = 0.7
-# lower_limit = 0
-# upper_limit = 1
-iterations = 100
+o = np.random.uniform(-80, 80, (1, m))
 
-x = np.random.uniform(0, 1, (n, m))
+def SHC(x):
+    F_1 = 100
+    return HC((x - o).T) + F_1
+
+
+
+x = lower_limit + (upper_limit - lower_limit)*np.random.uniform(0, 1, (n, m))
 v = np.zeros(x.shape)
-f_p = HC(x.T)
+f_p = SHC(x)
+print(f_p.shape)
 
 p = x
 g = x[np.argmin(f_p)]
@@ -28,7 +37,7 @@ g = x[np.argmin(f_p)]
 track = []
 
 for i in range(iterations):
-    f_i = HC(x.T)
+    f_i = SHC(x)
     
     cond = f_i < f_p
     p[cond] = x[cond]
@@ -47,6 +56,9 @@ for i in range(iterations):
     track.append([f_g])
     
 
+print(g)
+print(o)
+    
 plt.plot(np.arange(iterations), track)
 plt.show()
 
