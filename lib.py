@@ -4,12 +4,14 @@ import random
 
 # initialises a population of lions based on the parameters specified
 # and partitions them into the pride and nomad structures
-def generateGroups(nPop, sexRate, prideNo, percentNomad):
+def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limit, dim):
 
     # expected number of lions in each structure
     nomadPop = int(round(nPop * percentNomad, 0))
     pridePop = nPop - nomadPop
 
+    ''' Initialize the positions of the Lions '''
+    
 
     ''' setting up gender distribution for lions '''
     # bit array to determine whether lion is a male
@@ -69,11 +71,38 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad):
         ''' assigning each pride lion to a pride '''
         # index of pride to assign lion
         # eg for 4 prides, number is 0,1,2,3
-        prideIndex = random.rand(0, prideNo - 1)
-        prideArray[prideIndex].lionArray = np.append(prideArray[prideIndex].lionArray, prideLionsArray[i])
+        prideIndex = np.random.randint(0, prideNo)
+        print(prideIndex)
 
+        prideArray[prideIndex].lionArray = np.append(prideArray[prideIndex].lionArray,
+                                                     prideLionsArray[i])
+
+    ''' initialize lion positions'''
+    for pride in prideArray:
+        for lion in pride.lionArray:
+            lion.x = np.random.uniform(0, 1, (1, dim))
+            lion.bestVisitedPosition = lion.x
+
+    for lion in nomadLionsArray:
+        lion.x = np.random.uniform(lower_limit, upper_limit, (1, dim))
+        lion.bestVisitedPosition = lion.x
+        
     return prideArray, nomadLionsArray
 
+
+def hunting(pride):
+    huntgroup1 = np.array([])
+    huntgroup2 = np.array([])
+    huntgroup3 = np.array([])
+    
+    for lion in len(pride.lionArray):
+        # 0 is not in group, 1, 2, 3 correspond to respective hunting groups
+        if lion.isMale == False:
+            lion.huntinggroup = 0
+        else:
+            lion.huntinggroup = np.random.randint(0, 3)
+            
+    
 
 # represents a pride or a nomad group
 class Group:
@@ -87,10 +116,13 @@ class Group:
 class Lion:
 
     def __init__(self):
-
+        
         self.isMale = None
         self.bestVisitedPosition = None
+        self.bestVisitedPositionScore = None
         self.groupID = None             # id of the pride or nomad of the Lion
         self.strength = None
         self.isMature = None
         self.isNomad = None
+        self.x = None
+        self.huntinggroup = None

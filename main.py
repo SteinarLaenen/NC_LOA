@@ -17,3 +17,8 @@ sexRate = 0.8
 mateProb = 0.3
 migrateRate = 0.4
 nPop = 100
+upper_limit = 100
+lower_limit = -100
+dim = 30
+
+print(lib.generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limit, dim))
