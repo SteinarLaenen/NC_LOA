@@ -1,11 +1,12 @@
 # Lion Optimisation Algorithm implementation
 # Natural computing assignment
 # Python3.6.6
+# Main LOA engine
 
 # library imports
 import numpy as np
 
-import lib
+import LOA_lib
 
 
 # set algorithm params as global variables

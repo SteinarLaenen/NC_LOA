@@ -1,3 +1,9 @@
+# Lion Optimisation Algorithm implementation
+# Natural computing assignment
+# Python3.6.6
+# Auxiliary script for main LOA engine
+
+# library imports
 import numpy as np
 import random
 
