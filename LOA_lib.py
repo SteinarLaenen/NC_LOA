@@ -1,3 +1,9 @@
+# Lion Optimisation Algorithm implementation
+# Natural computing assignment
+# Python3.6.6
+# Auxiliary script for main LOA engine
+
+# library imports
 import numpy as np
 import random
 
@@ -87,6 +93,9 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
         lion.x = np.random.uniform(lower_limit, upper_limit, (1, dim))
         lion.bestVisitedPosition = lion.x
         
+        prideIndex = random.randint(0, prideNo - 1)
+        prideArray[prideIndex].lionArray = np.append(prideArray[prideIndex].lionArray, prideLionsArray[i])
+
     return prideArray, nomadLionsArray
 
 
