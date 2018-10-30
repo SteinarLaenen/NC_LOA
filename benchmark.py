@@ -34,4 +34,4 @@ def Katsuura(x):
     return sum
 
 def SRKatsuura(x, o):
-    Katsuura(5*(x - o)/100) + 1200
+    return Katsuura(5*(x - o)/100) + 1200
