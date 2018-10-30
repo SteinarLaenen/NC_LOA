@@ -5,6 +5,7 @@
 
 # library imports
 import LOA_lib
+import benchmark
 
 
 # set algorithm params as global variables
@@ -19,10 +20,11 @@ nPop = 100
 upper_limit = 100
 lower_limit = -100
 dim = 30
+evaluation = benchmark.HC
 
 # initialise the populations into structures of prides and nomads
 prideArray, nomadLionsArray = LOA_lib.generateGroups(nPop, sexRate, prideNo, percentNomad,
-                                                     upper_limit, lower_limit, dim)
+                                                     upper_limit, lower_limit, dim, evaluation)
 
 
 
@@ -39,4 +41,4 @@ prideArray, nomadLionsArray = LOA_lib.generateGroups(nPop, sexRate, prideNo, per
     #for each pride again
         #some femail migrate to pride
 
-    # final do: fig 11 step 
+    # final do: fig 11 step
