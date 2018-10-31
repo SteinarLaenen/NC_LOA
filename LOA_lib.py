@@ -99,7 +99,7 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
 def hunting(pride):
 
     # assign lion to a hunting group
-    for lion in len(pride.lionArray):
+    for lion in pride.lionArray:
 
         # 0 is not in group, 1, 2, 3 correspond to respective hunting groups
         if lion.isMale == False:        # male lions do not hunt
@@ -111,7 +111,21 @@ def hunting(pride):
     huntingGroup2Fitness = np.sum([lion.getCurrentPositionScore() for lion in pride.lionArray if lion.huntingGroup == 2])
     huntingGroup3Fitness = np.sum([lion.getCurrentPositionScore() for lion in pride.lionArray if lion.huntingGroup == 3])
 
-    preyPosition = np.
+
+    ''' set position of prey to average of hunter positions '''
+    preyPosition = np.zeros(len(pride.lionArray[0].x))      # initialize prey position
+
+    hunterLionNumber = 0            # count the number of hunter lions in the pride
+
+    for lion in pride.lionArray:
+        if not(lion.huntingGroup == 0):
+
+            preyPosition = np.add(preyPosition, lion.x)     # add the positions within each basis
+            hunterLionNumber += 1
+
+    # get the average position of the hunter lions
+    preyPosition /= hunterLionNumber
+
 
 
 
