@@ -92,8 +92,8 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
         prideArray[prideIndex].lionArray = np.append(prideArray[prideIndex].lionArray, prideLionsArray[i])
 
 
-
     return prideArray, nomadLionsArray
+
 
 
 def hunting(pride):
@@ -128,6 +128,60 @@ def hunting(pride):
 
 
 
+# returns a set of the indicies of prides which are not full because females have migrated
+# ie (1,3) would indicate the second and fourth pride can have more female lions to replace migrated ones
+def nonFullPrides(prideArray):
+
+    nonFullPrideIndicies = set()
+    for i in range(len(prideArray)):
+        if not(prideArray[i].migratedFemaleNo == 0):
+            nonFullPrideIndicies.add(i)
+
+    return nonFullPrideIndicies
+
+
+
+def nomadsToPride(prideArray, nomadLionsArray, nPop, sexRate, percentNomad):
+
+    # list of male and female lions sorted by strength
+    maleNomads = [lion for lion in nomadLionsArray if lion.isMale == True].sort(key lambda lion: lion.getCurrentPositionScore())
+    femaleNomads = [lion for lion in nomadLionsArray if lion.isMale == False].sort(key lambda lion: lion.getCurrentPositionScore())
+
+
+    ''' adding fittest female nomads to a pride with spare capacity '''
+    # while there are still some empty places in a pride due to migration
+    # add a female lion to the pride based on fitness
+    while not(nonFullPrides(prideArray) == set()):
+
+        # get indicies of prides which have spare capacity
+        nonFullPrideIndicies = nonFullPrides(prideArray)
+
+        # select at random a pride to add a lion
+        prideIndex = random.sample(nonFullPrideIndicies, 1)
+
+        # add fittest female to the pride
+        prideArray[prideIndex].lionArray = np.append(prideArray[prideIndex].lionArray, femaleNomads[0])
+        del femaleNomads[0]
+
+
+    ''' removing the least fit nomads '''
+    # to remain consistent max number of each gender in nomad population
+    maxMaleNomadNo = nPop * percentNomad * sexRate
+    maxFemaleNomadNo = nPop * percentNomad * (1 - sexRate)
+
+    # if number of male nomads is greater than that permitted
+    # remove the least fittest
+    while len(maleNomads) > maxMaleNomadNo:
+        del maleNomads[-1]
+
+    while len(femaleNomads) > maxFemaleNomadNo:
+        del femaleNomads[-1]
+
+    # collect surviving lions together
+    remainingNomadLions = np.concatenate((femaleNomads, maleNomads))
+
+
+    return prideArray, remainingNomadLions
 
 
 
@@ -138,6 +192,7 @@ class Group:
 
         self.isPride = isPride
         self.lionArray = np.array([])
+        self.migratedFemaleNo = None
 
 
 class Lion:
