@@ -51,6 +51,7 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
 
         nomadLionsArray[i].isNomad = True
         nomadLionsArray[i].evaluation = evaluation
+        nomadLionsArray[i].isMature = True
 
         # set gender of nomad lions
         if maleNomadIndicies[i] == 1:
@@ -69,6 +70,7 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
     for i in range(pridePop):
 
         prideLionsArray[i].isNomad = False
+        prideLionsArray[i].isMature = True
         prideLionsArray[i].evaluation = evaluation
 
         # set gender of pride lions
@@ -109,7 +111,7 @@ def hunting(pride):
     huntingGroup2Fitness = np.sum([lion.getCurrentPositionScore() for lion in pride.lionArray if lion.huntingGroup == 2])
     huntingGroup3Fitness = np.sum([lion.getCurrentPositionScore() for lion in pride.lionArray if lion.huntingGroup == 3])
 
-    preyPosition = 
+    preyPosition = np.
 
 
 
