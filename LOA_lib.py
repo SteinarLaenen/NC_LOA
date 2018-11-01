@@ -6,6 +6,7 @@
 # library imports
 import numpy as np
 import random
+import copy
 
 
 # initialises a population of lions based on the parameters specified
@@ -209,6 +210,49 @@ def nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim):
     return nomadLionsArray
 
 
+# male nomad lions attack a resident male of a pride
+# resident males are places depending on which lion is stronger
+def nomadsAttackPride(prideArray, nomadLionsArray):
+
+    for nomadInd in range(len(nomadLionsArray)):
+
+        # skip if nomad is female
+        if nomadLionsArray[nomadInd].isMale == False:
+            continue
+
+        # generate binary array with length of number of prides
+        # ie for 4 prides: [0,1,1,0], 1 means attack the pride
+        pridesToAttack = [random.randint(0, 1) for i in range(len(prideArray))]
+
+        # for each pride
+        for prideInd in range(len(prideArray)):
+
+            # attack pride
+            if pridesToAttack[prideInd] == 1:
+
+                # get resident lion from the pride
+                maleIndex = [mInd for mInd in range(len(prideArray[prideInd].lionArray)) if prideArray[prideInd].lionArray[mInd].isMale == True][0]
+                residentLion = prideArray[prideInd].lionArray[maleIndex]
+
+                # get the nomad lion to contest
+                nomadLion = nomadLionsArray[nomadInd]
+
+                # if the nomad is stronger than the resident
+                if nomadLion.getCurrentPositionScore() > residentLion.getCurrentPositionScore():
+
+                    # create a temporary resident lion object copy
+                    residentLionCopy = copy.deepcopy(residentLion)
+
+                    # replace resident with nomad
+                    residentLion = nomadLion
+
+                    # replace nomad with copy of resident
+                    nomadLion = residentLionCopy
+
+
+    return prideArray, nomadLionsArray
+
+
 
 # represents a pride or a nomad group
 class Group:
@@ -232,7 +276,6 @@ class Lion:
         self.isNomad = None
         self.x = None
         self.huntingGroup = None
-
 
 
     # fitness value of best visited position

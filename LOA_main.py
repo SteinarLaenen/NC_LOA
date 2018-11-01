@@ -38,17 +38,20 @@ for it in range(maxIterationNo):
         #some femail go hunting
         #other stuff too
 
+
     ''' step 4 '''
     # move nomads about randomly in search space
     nomadLionsArray = LOA_lib.nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim)
 
     # nomad male randomly attack pride
+    prideArray, nomadLionsArray = LOA_lib.nomadsAttackPride(prideArray, nomadLionsArray)
 
 
 
     ''' step 5 '''
     #for each pride again
         #some femail migrate to pride
+
 
     ''' step 6 '''
     # allocate some female nomad lions to the prides
