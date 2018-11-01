@@ -22,27 +22,35 @@ lower_limit = 100
 dim = 30
 evaluation = benchmark.HC
 
+maxIterationNo = 1000
+
+
+''' steps 1 & 2 '''
 # initialise the populations into structures of prides and nomads
 prideArray, nomadLionsArray = LOA_lib.generateGroups(nPop, sexRate, prideNo, percentNomad,
                                                      upper_limit, lower_limit, dim, evaluation)
 
 
-for lion in nomadLionsArray:
-    print(lion.x)
+for it in range(maxIterationNo):
 
-
-
-#while True:
-
-
+    ''' step 3 '''
     #for each pride:
         #some femail go hunting
         #other stuff too
 
-    #for each nomad:
-        #move about randomly in search space
+    ''' step 4 '''
+    # move nomads about randomly in search space
+    nomadLionsArray = LOA_lib.nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim)
 
+    # nomad male randomly attack pride
+
+
+
+    ''' step 5 '''
     #for each pride again
         #some femail migrate to pride
 
-    # final do: fig 11 step
+    ''' step 6 '''
+    # allocate some female nomad lions to the prides
+    # kill off the least fit nomad lions
+    prideArray, nomadLionsArray = LOA_lib.step6(prideArray, nomadLionsArray, nPop, sexRate, percentNomad)

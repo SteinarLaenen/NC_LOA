@@ -140,8 +140,10 @@ def nonFullPrides(prideArray):
     return nonFullPrideIndicies
 
 
-
-def nomadsToPride(prideArray, nomadLionsArray, nPop, sexRate, percentNomad):
+# move some female nomad lions to a pride which has spare capacity
+# prides have spare capacity as a result of prior female migration
+# remove the weakest lions to remain consistent with permitted number for each gender
+def step6(prideArray, nomadLionsArray, nPop, sexRate, percentNomad):
 
     # list of male and female lions sorted by strength
     maleNomads = [lion for lion in nomadLionsArray if lion.isMale == True].sort(key lambda lion: lion.getCurrentPositionScore())
@@ -182,6 +184,29 @@ def nomadsToPride(prideArray, nomadLionsArray, nPop, sexRate, percentNomad):
 
 
     return prideArray, remainingNomadLions
+
+
+# nomad lions moving randomly in the search space
+def nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim):
+
+    for lion in nomadLionsArray:
+
+        # best position of all nomad lions
+        bestPosition = np.min([lion.x for lion in nomadLionsArray])
+
+        # the max threshold number in order for the lion to roam
+        thresholdRoamingProbability = 0.1 + np.min(0.5, (lion.x - bestPosition) / bestPosition)
+
+        # move lion if not greater than the threshold
+        if not(random.random() > thresholdRoamingProbability):
+             lion.x = np.random.uniform(lower_limit, upper_limit, (1, dim))
+
+             # update the best visited position if better than current
+            if lion.getBestVisitedPositionScore() < lion.getCurrentPositionScore():
+                lion.bestVisitedPosition = lion.x
+
+
+    return nomadLionsArray
 
 
 
