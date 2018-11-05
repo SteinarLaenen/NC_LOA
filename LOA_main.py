@@ -32,8 +32,13 @@ prideArray, nomadLionsArray = LOA_lib.generateGroups(nPop, sexRate, prideNo, per
 
 
 for it in range(maxIterationNo):
-
+    # update the list of best scores obtained for each iteration
+    prideArray, nomadLionsArray = LOA_lib.updateBestScoreList(prideArray, nomadLionsArray)
+    
+    
     ''' step 3 '''
+    prideArray = LOA_lib.hunting(prideArray)
+    prideArray = LOA_lib.moveToSafePlace(prideArray)
     #for each pride:
         #some femail go hunting
         #other stuff too
@@ -41,10 +46,10 @@ for it in range(maxIterationNo):
 
     ''' step 4 '''
     # move nomads about randomly in search space
-    nomadLionsArray = LOA_lib.nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim)
+    #nomadLionsArray = LOA_lib.nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim)
 
     # nomad male randomly attack pride
-    prideArray, nomadLionsArray = LOA_lib.nomadsAttackPride(prideArray, nomadLionsArray)
+    #prideArray, nomadLionsArray = LOA_lib.nomadsAttackPride(prideArray, nomadLionsArray)
 
 
 
@@ -56,4 +61,6 @@ for it in range(maxIterationNo):
     ''' step 6 '''
     # allocate some female nomad lions to the prides
     # kill off the least fit nomad lions
-    prideArray, nomadLionsArray = LOA_lib.step6(prideArray, nomadLionsArray, nPop, sexRate, percentNomad)
+    #prideArray, nomadLionsArray = LOA_lib.step6(prideArray, nomadLionsArray, nPop, sexRate, percentNomad)
+
+    

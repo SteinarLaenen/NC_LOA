@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 
 
 def HC(x):
+    x = x.T
     sum = 0.0
     for i in range(1, len(x) + 1):
         sum += ((10 ** 6) ** ((i - 1) / (len(x) - 1))) * x[i - 1] ** 2
