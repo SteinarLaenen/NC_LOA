@@ -221,7 +221,7 @@ def nomadsAttackPride(prideArray, nomadLionsArray):
             continue
 
         # generate binary array with length of number of prides
-        # ie for 4 prides: [0,1,1,0], 1 means attack the pride
+        # ie for 4 prides: [0,1,1,0] means attack the prides 2 and 3 only
         pridesToAttack = [random.randint(0, 1) for i in range(len(prideArray))]
 
         # for each pride
