@@ -39,6 +39,7 @@ for it in range(maxIterationNo):
     ''' step 3 '''
     prideArray = LOA_lib.hunting(prideArray)
     prideArray = LOA_lib.moveToSafePlace(prideArray)
+    prideArray = LOA_lib.roaming(prideArray, roamingPercent)
     #for each pride:
         #some femail go hunting
         #other stuff too

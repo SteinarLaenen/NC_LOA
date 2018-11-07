@@ -148,11 +148,9 @@ def hunting(prideArray):
             if lion.getBestVisitedPositionScore() > lion.getCurrentPositionScore():
                 # get the improvement percentage
                 improvement_percentage = lion.getBestVisitedPositionScore()/lion.getCurrentPositionScore()
-                print(improvement_percentage)
                 lion.bestVisitedPosition = lion.x
                 # change the position of the prey according to Opposition Based Learning
                 preyPosition = preyPosition + np.random.uniform(0, 1) * improvement_percentage * (preyPosition - lion.x)
-        print(preyPosition)
 
     return prideArray
 
@@ -183,28 +181,60 @@ def moveToSafePlace(prideArray):
 
                 # tournament selection
                 tournamentSelection = random.sample(bestVisitedPositions, tournamentsize)
+                # winner has lowest fitness value
                 winner = min(tournamentSelection,key=lambda item:item[1])[0]
                 
                 R1 = (winner.T).reshape(len(winner.T),)
                 startposition = (lion.x.T).reshape(len(lion.x.T),)
                 R1 = R1 - startposition
-                
 
-                #some parameters for moving the female non-hunting lion
-                D = np.linalg.norm(lion.x - R1)
+                # some parameters for moving the female non-hunting lion
+                D = np.linalg.norm(winner - lion.x)
 
                 # create random orthonormal vector to R1
                 R2 = np.random.randn(len(R1.T))
-                R2 -= R2.dot(R1) * R1 / np.linalg.norm(R1)**2
+                if np.linalg.norm(R1) != 0:
+                    R2 -= R2.dot(R1) * R1 / np.linalg.norm(R1)**2
+                else:
+                    # if R1 is the zero, generate 0 vector with random 1
+                    R2 = np.zeros((len(R1)))[np.random.randint(0, len(R1))] = 1
 
-                #HOW DO WE PICK?
-                theta = 0
+                theta = np.random.uniform(-np.pi/6, np.pi/6)
 
+                # how paper does it
+                # removed the distance term, should add it again later to see if
+                # it works
                 lion.x = lion.x + 2*np.random.uniform(0,1)*R1 + \
-                         np.random.uniform(-1, 1) * np.tan(theta) *  R2
-
+                          np.random.uniform(-1, 1)*np.tan(theta)*R2
                 
     return prideArray
+
+def roaming(prideArray, roamingPercent):
+    """
+    params in:
+    prideArray: Array containing prides
+    roamingPercent: 
+    """
+    for pride in prideArray:
+        # territory containing best visited locations of all lions in the pride
+       
+        # randomly selected subset of the territory to be visited by roaming males
+
+        # move all male lions towards each selected position
+        for lion in pride.lionArray:
+            if lion.isMale == True:
+                territory = [(lion.bestVisitedPosition, lion.getBestVisitedPositionScore()) for lion in pride.lionArray]
+                selected = random.sample(territory, int(np.ceil(len(territory)*roamingPercent)))
+                for place in selected:
+                    angle = np.random.uniform(-np.pi/6, np.pi/6)
+                    distance = np.linalg.norm(lion.x - place[0])
+                    step = np.random.uniform(0, 0.2*distance)
+                    lion.x = lion.x + np.tan(angle) + step
+
+                    if lion.getCurrentPositionScore() < lion.getBestVisitedPositionScore():
+                        lion.bestVisitedPosition = lion.x
+
+    return(prideArray)
 
 
 # returns a set of the indicies of prides which are not full because females have migrated
