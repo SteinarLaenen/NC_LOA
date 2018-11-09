@@ -47,6 +47,9 @@ for it in range(maxIterationNo):
     # move nomads about randomly in search space
     nomadLionsArray = LOA_lib.nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim)
 
+    # nomads mate
+    nomadLionsArray = LOA_lib.mateNomads(nomadLionsArray, mateProb, mutateProb, lower_limit, upper_limit)
+
     # nomad male randomly attack pride
     prideArray, nomadLionsArray = LOA_lib.nomadsAttackPride(prideArray, nomadLionsArray)
 

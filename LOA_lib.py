@@ -262,6 +262,34 @@ def nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim):
     return nomadLionsArray
 
 
+# female nomads mate with one of best male nomads and cubs become mature
+# under step 4
+def mateNomads(nomadLionsArray, mateProb, mutateProb, lower_limit, upper_limit):
+
+    # for each lion
+    for lion in nomadLionsArray:
+
+        # skip if lion is not female AND only mate with probability ~ mateProb
+        if (lion.isMale != True) and (random.random() < mateProb):
+
+            # randomly select a male lion for breeding
+            maleMate = random.sample([l for l in nomadLionsArray if l.isMale == True], 1)[0]
+
+            # get cubs
+            cub1, cub2 = matingOperator(lion.x, np.array([maleMate.x]), mutateProb, lower_limit, upper_limit)
+            cub1.evaluation, cub2.evaluation = lion.evaluation, lion.evaluation
+            cub1.isNomad, cub2.isNomad = True, True
+
+            # add cubs become mature and are added to the array of nomad lions
+            cub1.isMature, cub2.isMature = True, True
+            nomadLionsArray = np.append(nomadLionsArray, cub1)
+            nomadLionsArray = np.append(nomadLionsArray, cub2)
+
+
+    return nomadLionsArray
+
+
+
 # male nomad lions attack a resident male of a pride
 # resident males are places depending on which lion is stronger
 # under step 4
@@ -433,6 +461,67 @@ def step6(prideArray, nomadLionsArray, nPop, sexRate, percentNomad):
 
 
     return prideArray, remainingNomadLions
+
+
+
+# mating operator for a female to breed with one or more male lion
+# femalePos is lion.x - the position of the female
+# malesPos is an array of [lion.x] - the positions of the males in a np.array
+# returns two offspring Lion objects following the procedure in the paper
+# used for steps 3 and 4
+def matingOperator(femalePos, malesPosAr, mutateProb, lower_limit, upper_limit):
+
+    # random gaussian var as per the paper to normalise "crossover"
+    beta = np.random.normal(0.5, 0.1)
+
+    # number of males in the mating
+    maleNo = len(malesPosAr)
+
+    # sum up over each basis the positions of all males
+    # eg. [1,1,1] + [3,4,6] => [4,5,7]
+    malePositionSum = np.zeros(len(femalePos))                  # initialize positions
+
+    for malePos in malesPosAr:
+        malePositionSum = np.add(malePositionSum, malePos)      # add the positions within each basis
+
+    # get the average position of the male lions
+    malePositionAve = malePositionSum / maleNo
+
+    # generate offspring position vectors
+    offspringVec1 = beta * femalePos + (1 - beta) * malePositionAve
+    offspringVec2 = (1 - beta) * femalePos + beta * malePositionAve
+
+    # mutate the position vectors
+    for basis in range(len(offspringVec1)):
+
+        # mutate each basis of first offspring vector with probability ~ mutateProb
+        if random.random() < mutateProb:
+            offspringVec1[basis] = np.random.uniform(lower_limit, upper_limit)         # change to a random number in the search space
+
+        # mutate each basis of second offspring vector with probability ~ mutateProb
+        if random.random() < mutateProb:
+            offspringVec2[basis] = np.random.uniform(lower_limit, upper_limit)         # change to a random number in the search space
+
+
+    # put these vectors into lion objects
+    cub1 = Lion()
+    cub1.x = offspringVec1
+    cub1.isMale = (beta >= 0.5)       # randomly set gender of cub
+    cub1.bestVisitedPosition = offspringVec1
+    cub1.isMature = False
+    #cub1.evaluation = None           # VAR MUST BE SET ONCE THIS FUNCTION HAS RETURNED!!!
+    #cub1.isNomad = None              # VAR MUST BE SET ONCE THIS FUNCTION HAS RETURNED!!!
+
+    cub2 = Lion()
+    cub2.x = offspringVec2
+    cub2.isMale = not(cub1.isMale)    # randomly set gender of cub
+    cub2.bestVisitedPosition = offspringVec2
+    cub2.isMature = False
+    #cub2.evaluation = None           # VAR MUST BE SET ONCE THIS FUNCTION HAS RETURNED!!!
+    #cub2.isNomad = None              # VAR MUST BE SET ONCE THIS FUNCTION HAS RETURNED!!!
+
+
+    return cub1, cub2
 
 
 
