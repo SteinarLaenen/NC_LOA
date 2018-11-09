@@ -6,6 +6,7 @@
 # library imports
 import LOA_lib
 import benchmark
+import sys
 
 
 # set algorithm params as global variables
@@ -52,7 +53,7 @@ for it in range(maxIterationNo):
 
     ''' step 5 '''
     # females migrate from a pride and join the nomads with some probability
-    #prideArray, nomadLionsArray = LOA_lib.migrateFemaleFromPride(prideArray, nomadLionsArray, migrateRate, sexRate)
+    prideArray, nomadLionsArray = LOA_lib.migrateFemaleFromPride(prideArray, nomadLionsArray, migrateRate, sexRate)
 
 
     ''' step 6 '''
