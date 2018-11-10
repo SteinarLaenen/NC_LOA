@@ -80,6 +80,8 @@ for it in range(maxIterationNo):
         global_best.append(global_best[-1])
 
     elapsed_time = (time.time() - start_time)
+    if it % 100 == 0:
+        print("Finished%", it/maxIterationNo)
 
     
 

@@ -71,6 +71,8 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
     # init array of prideNo pride groups
     prideArray = np.array([Group() for i in range(prideNo)])
 
+    # counter to ensure that there is at least one male in each pride (prevents errors)
+    j = 0
     for i in range(pridePop):
 
         prideLionsArray[i].isNomad = False
@@ -81,6 +83,9 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
         # set gender of pride lions
         if malePrideIndicies[i] == 1:
             prideLionsArray[i].isMale = True
+            if j in [0, 1, 2, 3]:
+                prideIndex = j
+                j += 1
         else:
             prideLionsArray[i].isMale = False
 
@@ -92,7 +97,8 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
         ''' assigning each pride lion to a pride '''
         # index of pride to assign lion
         # eg for 4 prides, number is 0,1,2,3
-        prideIndex = np.random.randint(0, prideNo)
+        if j not in [0, 1, 2, 3] or malePrideIndicies[i] != 1:
+            prideIndex = np.random.randint(0, prideNo)
 
         prideArray[prideIndex].lionArray = np.append(prideArray[prideIndex].lionArray, prideLionsArray[i])
 
