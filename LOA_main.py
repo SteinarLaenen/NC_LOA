@@ -20,8 +20,8 @@ sexRate = 0.8
 mateProb = 0.3
 migrateRate = 0.4
 nPop = 50
-upper_limit = -100
-lower_limit = 100
+upper_limit = 100
+lower_limit = -100
 dim = 30
 evaluation = benchmark.SHC
 o = np.random.uniform(-80, 80, (1, dim))
@@ -43,7 +43,7 @@ for it in range(maxIterationNo):
 
 
     ''' step 3 '''
-    prideArray = LOA_lib.hunting(prideArray)
+    prideArray = LOA_lib.hunting(prideArray, upper_limit, lower_limit)
     prideArray = LOA_lib.moveToSafePlace(prideArray, upper_limit, lower_limit, dim)
     prideArray = LOA_lib.pridesRoam(prideArray, roamingPercent, upper_limit, lower_limit, dim)
     prideArray = LOA_lib.prideMating(prideArray, mateProb,

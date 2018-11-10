@@ -110,7 +110,7 @@ def generateGroups(nPop, sexRate, prideNo, percentNomad, upper_limit, lower_limi
 ''' females go hunting to explore the search space by attacking hypothetical prey '''
 ''' Opposition-Based-Learning implementation '''
 # under step 3
-def hunting(prideArray):
+def hunting(prideArray, upper_limit, lower_limit):
 
     for pride in prideArray:
         # assign lion to a hunting group
@@ -135,6 +135,13 @@ def hunting(prideArray):
         hunterLionNumber = 0                                    # count the number of hunter lions in the pride
 
         for lion in pride.lionArray:
+            # put lion back into search area
+            for i, j in enumerate(lion.x[0]):
+                if j > upper_limit:
+                    lion.x[0][i] = upper_limit
+                if j < lower_limit:
+                    lion.x[0][i] = lower_limit
+        
             if not(lion.huntingGroup == 0):
 
                 preyPosition = np.add(preyPosition, lion.x)     # add the positions within each basis
@@ -168,7 +175,7 @@ def hunting(prideArray):
 
                 if lion.evaluation(2 * preyPosition - lion.x, lion.o) > lion.evaluation(preyPosition, lion.o):
                     lion.x = np.random.uniform(preyPosition, 2 * preyPosition - lion.x)
-
+                
             # If lion's position is improved, update it's best visited position and score
             if lion.getBestVisitedPositionScore() > lion.getCurrentPositionScore():
                 # get the improvement percentage
@@ -177,6 +184,7 @@ def hunting(prideArray):
                 # change the position of the prey according to Opposition Based Learning
                 preyPosition = preyPosition + np.random.uniform(0, 1) * \
                                improvement_percentage * (preyPosition - lion.x)
+
 
     return prideArray
 
@@ -216,7 +224,7 @@ def moveToSafePlace(prideArray, upper_limit, lower_limit, dim):
                 # some parameters for moving the female non-hunting lion
                 # distance is a percetage of the maximum distance in the search space
                 D = np.linalg.norm(R1 - lion.x) \
-                                / np.sqrt(dim * (upper_limit - lower_limit) ** 2)
+                                / np.linalg.norm(upper_limit - lower_limit)
 
                 # create random orthonormal vector to R1
                 R2 = np.random.randn(len(R1.T))
@@ -253,7 +261,8 @@ def pridesRoam(prideArray, roamingPercent, upper_limit, lower_limit, dim):
                 for place in selected:
                     angle = np.random.uniform(-np.pi/6, np.pi/6)
                     distance = np.linalg.norm(place[0] - lion.x) \
-                                    / np.sqrt(dim * (upper_limit - lower_limit) ** 2)
+                                    / np.linalg.norm(upper_limit - lower_limit)
+                    distance = 1
                     step = np.random.uniform(0, 0.2 * distance)
                     lion.x += step * (place[0] - lion.x) * np.tan(angle)
 
@@ -347,7 +356,7 @@ def nomadsRoam(nomadLionsArray, lower_limit, upper_limit, dim):
              lion.x = np.random.uniform(lower_limit, upper_limit, (1, dim))
 
         # update the best visited position if better than current
-        if lion.getBestVisitedPositionScore() < lion.getCurrentPositionScore():
+        if lion.getBestVisitedPositionScore() > lion.getCurrentPositionScore():
             lion.bestVisitedPosition = lion.x
 
 
