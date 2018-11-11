@@ -6,9 +6,30 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+def Discus(x):
+    sum = 0.0
+    for i in range(2, len(x)+1):
+        sum += x[i-1] ** 2
+    sum += (10**6) * (x[i-1] ** 2)
+    return sum
 
+def RDiscus(x, o):
+    F_3 = 300
+    return Discus((x - o).T) + F_3
+    
+def BC(x):
+    sum = 0.0
+    sum += x[1] ** 2
+    for i in range(2, len(x) + 1):
+        sum += (x[i - 1] ** 2)
+    sum *= (10**6)
+    return sum
+
+def RBC(x, o):
+    F_2 = 200
+    return BC((x - o).T) + F_2
+    
 def HC(x):
-    x = x
     sum = 0.0
     for i in range(1, len(x) + 1):
         sum += ((10 ** 6) ** ((i - 1) / (len(x) - 1))) * x[i - 1] ** 2
