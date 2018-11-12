@@ -115,6 +115,14 @@ def hunting(prideArray, upper_limit, lower_limit):
     for pride in prideArray:
         # assign lion to a hunting group
         for lion in pride.lionArray:
+            # put lion back into search area
+            for i, j in enumerate(lion.x[0]):
+                if j > upper_limit:
+                    lion.x[0][i] = upper_limit
+                if j < lower_limit:
+                    lion.x[0][i] = lower_limit
+
+                    
             # 0 is not in group, 1, 2, 3 correspond to respective hunting groups
             if lion.isMale == True:        # male lions do not hunt
                 lion.huntingGroup = 0
@@ -134,18 +142,11 @@ def hunting(prideArray, upper_limit, lower_limit):
 
         hunterLionNumber = 0                                    # count the number of hunter lions in the pride
 
-        for lion in pride.lionArray:
-            # put lion back into search area
-            for i, j in enumerate(lion.x[0]):
-                if j > upper_limit:
-                    lion.x[0][i] = upper_limit
-                if j < lower_limit:
-                    lion.x[0][i] = lower_limit
         
-            if not(lion.huntingGroup == 0):
-
-                preyPosition = np.add(preyPosition, lion.x)     # add the positions within each basis
-                hunterLionNumber += 1
+        if not(lion.huntingGroup == 0):
+            
+            preyPosition = np.add(preyPosition, lion.x)     # add the positions within each basis
+            hunterLionNumber += 1
 
         # get the average position of the hunter lions
         preyPosition /= hunterLionNumber
