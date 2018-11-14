@@ -1,14 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt    
 from benchmark import *
+import time
 
 def main():
     # adjustable parameters
-    m = 30
+    m = 100
     n = 50
-    alpha1 = 2
-    alpha2 = 2
-    omega = 0.7
+    alpha1 = 0.5
+    alpha2 = 0.5
+    omega = 0.93
     lower_limit = -100
     upper_limit = 100
     iterations = 3000
@@ -24,26 +25,30 @@ def main():
         # set each row to be one run of the algorithm
         training_curves[run] = PSO(m, n, alpha1, alpha2,
                                    omega, lower_limit, upper_limit,
-                                   iterations, SHC, o)
+                                   iterations, SRosenbrock, o)
 
 
         if run % 10 == 0:
             print("number of runs completed = ", run,  "/", runs)
 
+    # training curves for each run are saved in a numpy array
+    np.save("PSO_NAMEFUNCTION_trainingcurves", training_curves)
+
+    
     # get average and std of all iterations
-    average_train_curve = np.mean(training_curves, axis = 0)
+    average_train_curve = np.median(training_curves, axis = 0)
     standard_dev_train_curve = np.std(training_curves, axis = 0)
 
     # find max/min/mean/std value of the best found (last element)
     maximum = np.max(training_curves[:, -1])
     minimum = np.min(training_curves[:, -1])
-    mean = average_train_curve[-1]
+    median = average_train_curve[-1]
     std = standard_dev_train_curve[-1]
 
     # print results
     print('maximum: {:.2e}'.format(maximum))
     print('minimum: {:.2e}'.format(minimum))
-    print('mean: {:.2e}'.format(mean))
+    print('median: {:.2e}'.format(median))
     print('std: {:.2e}'.format(std))
 
     # plot
@@ -73,8 +78,10 @@ def PSO(m, n, alpha1, alpha2, omega, lower_limit, upper_limit, iterations, fitne
     g = x[np.argmin(f_p)]
 
     track = []
-
+    time_track = []
+    
     for i in range(iterations):
+        time_first = time.time()
         f_i = fitness(x, o)
 
         # Update personal bests
@@ -95,7 +102,12 @@ def PSO(m, n, alpha1, alpha2, omega, lower_limit, upper_limit, iterations, fitne
         x = x + v
     
         track.append([f_g])
+        time_track.append(time.time() - time_first)
 
+    time_track = np.array(time_track)
+    # print("mean_time: {:.2e}".format(np.mean(time_track)))
+    # print("mean_time: {:.2e}".format(np.std(time_track)))
+        
     return np.resize(np.array(track), (3000,))
 
 if __name__ == "__main__":
