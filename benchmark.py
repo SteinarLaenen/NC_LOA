@@ -1,10 +1,21 @@
-# Lion Optimisation Algorithm implementation
+1# Lion Optimisation Algorithm implementation
 # Natural computing assignment
 # Python3.6.6
 # Benchmark functions for testing of LOA and PSO
 
 import numpy as np
 from matplotlib import pyplot as plt
+
+
+def Rastrigin(x):
+    sum = 0.0
+    for i in range(len(x)):
+        sum += x[i] ** 2 - (10.0 * np.cos(2 * np.pi * x[i]))
+    sum += 10 * len(x)
+    return sum
+
+def SRastrigin(x, o):
+    return Rastrigin(00.512*(x - o).T) + 800
 
 def Discus(x):
     sum = 0.0
@@ -57,3 +68,12 @@ def Katsuura(x):
 
 def SRKatsuura(x, o):
     return Katsuura(5*(x - o)/100) + 1200
+
+def Rosenbrock(x):
+    sum = 0.0
+    for i in range(len(x) - 1):
+        sum += ((100 * (x[i + 1] - x[i] ** 2) * (x[i + 1] - x[i] ** 2)) + ((x[i] - 1.0) * (x[i] - 1.0)));
+    return sum
+
+def SRosenbrock(x, o):
+    return Rosenbrock(2.048*(x - o).T/100 + 1) + 400
