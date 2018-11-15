@@ -32,7 +32,7 @@ def main():
             print("number of runs completed = ", run,  "/", runs)
 
     # training curves for each run are saved in a numpy array
-    np.save("PSO_NAMEFUNCTION_trainingcurves", training_curves)
+    np.save("PSO_SRosenbrock_trainingcurves", training_curves)
 
     
     # get average and std of all iterations
